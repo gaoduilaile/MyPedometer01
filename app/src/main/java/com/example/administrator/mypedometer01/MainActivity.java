@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         new Thread(new Runnable() {
             @Override
             public void run() {
-                startService(new Intent(MainActivity.this, SensorListener.class));
+                Intent i = new Intent(MainActivity.this, SensorListener.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startService(i);
             }
         });
 
