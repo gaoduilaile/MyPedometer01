@@ -23,7 +23,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Pair;
 
-import com.example.administrator.mypedometer01.util.Logger;
 import com.example.administrator.mypedometer01.util.Util;
 
 import java.util.ArrayList;
@@ -100,7 +99,6 @@ public class Database extends SQLiteOpenHelper {
      * the previous day, if there is an entry for that date.
      * <p/>
      * This method does nothing if there is already an entry for 'date' - use
-     * {@link #updateSteps} in this case.
      * <p/>
      * To restore data from a backup, use {@link #insertDayFromBackup}
      *
@@ -127,7 +125,6 @@ public class Database extends SQLiteOpenHelper {
             }
             c.close();
             if (BuildConfig.DEBUG) {
-                Logger.log("insertDay " + date + " / " + steps);
                 logState();
             }
             getWritableDatabase().setTransactionSuccessful();
@@ -187,7 +184,6 @@ public class Database extends SQLiteOpenHelper {
         if (BuildConfig.DEBUG) {
             Cursor c = getReadableDatabase()
                     .query(DB_NAME, null, null, null, null, null, "date DESC", "5");
-            Logger.log(c);
             c.close();
         }
     }
@@ -359,7 +355,6 @@ public class Database extends SQLiteOpenHelper {
             getWritableDatabase().insert(DB_NAME, null, values);
         }
         if (BuildConfig.DEBUG) {
-            Logger.log("saving steps in db: " + steps);
         }
     }
 

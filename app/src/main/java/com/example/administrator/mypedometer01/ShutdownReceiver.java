@@ -19,18 +19,15 @@ package com.example.administrator.mypedometer01;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
-import com.example.administrator.mypedometer01.util.Logger;
 import com.example.administrator.mypedometer01.util.Util;
 
 public class ShutdownReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        if (BuildConfig.DEBUG) Logger.log("shutting down");
-
-        context.startService(new Intent(context, SensorListener.class));
-
+        Log.e("sfsadfs", "ShutdownReceiver----广播----");
         // if the user used a root script for shutdown, the DEVICE_SHUTDOWNa
         // broadcast might not be send. Therefore, the app will check this
         // setting on the next boot and displays an error message if it's not
@@ -42,20 +39,15 @@ public class ShutdownReceiver extends BroadcastReceiver {
         // if it's already a new day, add the temp. steps to the last one
         if (db.getSteps(Util.getToday()) == Integer.MIN_VALUE) {
             int steps = db.getCurrentSteps();
-            int pauseDifference = steps -
-                    context.getSharedPreferences("pedometer", Context.MODE_PRIVATE)
-                            .getInt("pauseCount", steps);
-            db.insertNewDay(Util.getToday(), steps - pauseDifference);
-            if (pauseDifference > 0) {
-                // update pauseCount for the new day
-                context.getSharedPreferences("pedometer", Context.MODE_PRIVATE).edit()
-                        .putInt("pauseCount", steps).commit();
-            }
+            db.insertNewDay(Util.getToday(), steps);
         } else {
             db.addToLastEntry(db.getCurrentSteps());
         }
         // current steps will be reset on boot @see BootReceiver
         db.close();
+
+        context.startService(new Intent(context, SensorListenerService.class));
+
     }
 
 }

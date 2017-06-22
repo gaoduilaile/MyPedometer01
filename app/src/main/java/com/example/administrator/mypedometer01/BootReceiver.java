@@ -20,25 +20,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
-import static com.example.administrator.mypedometer01.util.Logger.log;
+import android.util.Log;
 
 
 public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        if (BuildConfig.DEBUG) log("booted");
+        Log.e("sfsadfs", "BootReceiver----广播----");
 
         SharedPreferences prefs = context.getSharedPreferences("pedometer", Context.MODE_PRIVATE);
 
         Database db = Database.getInstance(context);
 
         if (!prefs.getBoolean("correctShutdown", false)) {
-            if (BuildConfig.DEBUG) log("Incorrect shutdown");
             // can we at least recover some steps?
             int steps = db.getCurrentSteps();
-            if (BuildConfig.DEBUG) log("Trying to recover " + steps + " steps");
             db.addToLastEntry(steps);
         }
         // last entry might still have a negative step value, so remove that
@@ -48,6 +45,17 @@ public class BootReceiver extends BroadcastReceiver {
         db.close();
         prefs.edit().remove("correctShutdown").apply();
 
-        context.startService(new Intent(context, SensorListener.class));
+//        Database db = Database.getInstance(context);
+//        // if it's already a new day, add the temp. steps to the last one
+//        if (db.getSteps(Util.getToday()) == Integer.MIN_VALUE) {
+//            int steps = db.getCurrentSteps();
+//            db.insertNewDay(Util.getToday(), steps);
+//        } else {
+//            db.addToLastEntry(db.getCurrentSteps());
+//        }
+//        // current steps will be reset on boot @see BootReceiver
+//        db.close();
+
+        context.startService(new Intent(context, SensorListenerService.class));
     }
 }

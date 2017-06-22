@@ -19,17 +19,15 @@ package com.example.administrator.mypedometer01;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import com.example.administrator.mypedometer01.util.Logger;
+import android.util.Log;
 
 
 public class AppUpdatedReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive(final Context context, final Intent intent) {
-		if (BuildConfig.DEBUG)
-			Logger.log("app updated");
-		context.startService(new Intent(context, SensorListener.class));
-	}
+    @Override
+    public void onReceive(final Context context, final Intent intent) {
+        Log.e("sfsadfs", "AppUpdatedReceiver----广播----");
+        context.startService(new Intent(context, SensorListenerService.class));
+    }
 
 }
